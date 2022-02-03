@@ -6,6 +6,7 @@ us\pserver\tools\StringPad.class
 com\jun0rr\util\Reflector$ReflectorException.class
 com\jun0rr\util\Hash.class
 com\jun0rr\util\Reflector.class
+com\jun0rr\util\Base64Codec.class
 com\jun0rr\util\match\Check.class
 com\jun0rr\util\Unchecked$UncheckedFunction.class
 module-info.class
