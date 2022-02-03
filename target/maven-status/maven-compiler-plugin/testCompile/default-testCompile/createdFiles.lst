@@ -1,0 +1,7 @@
+com\jun0rr\util\test\TestHash.class
+com\jun0rr\util\test\TestStringPad.class
+com\jun0rr\util\test\TestDateDiff.class
+com\jun0rr\util\test\TestMatch.class
+com\jun0rr\util\test\TestReflector.class
+com\jun0rr\util\test\TestUTF8String.class
+com\jun0rr\util\test\TestUnchecked.class
