@@ -5,6 +5,7 @@
  */
 package com.jun0rr.util;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URL;
@@ -19,6 +20,11 @@ public interface Host {
   
   public String getHostname();
   
+  public default String getIPAddress() {
+    InetAddress address = Unchecked.call(()->InetAddress.getByName(getHostname())); 
+    return address.getHostAddress();
+  }
+  
   public int getPort();
   
   public default InetSocketAddress toSocketAddr() {
@@ -30,6 +36,10 @@ public interface Host {
   }
   
   
+  
+  public static Host localhost(int port) {
+    return new HostImpl("localhost", port);
+  }
   
   public static Host of(String host, int port) {
     return new HostImpl(host, port);
