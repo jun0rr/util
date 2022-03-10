@@ -7,9 +7,13 @@ com\jun0rr\util\Reflector$ReflectorException.class
 com\jun0rr\util\Hash.class
 com\jun0rr\util\Reflector.class
 com\jun0rr\util\Base64Codec.class
+com\jun0rr\util\Condition$ConditionImpl.class
 com\jun0rr\util\match\Check.class
 com\jun0rr\util\Unchecked$UncheckedFunction.class
+com\jun0rr\util\FCondition$FConditionImpl.class
+com\jun0rr\util\Condition.class
 module-info.class
+com\jun0rr\util\FCondition.class
 com\jun0rr\util\CharsetString.class
 com\jun0rr\util\Host$HostImpl.class
 com\jun0rr\util\match\ExceptionHandle.class
