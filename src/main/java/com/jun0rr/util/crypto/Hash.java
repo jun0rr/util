@@ -19,7 +19,7 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
-package com.jun0rr.util;
+package com.jun0rr.util.crypto;
 
 import com.jun0rr.util.UTF8String;
 import com.jun0rr.util.match.Match;
@@ -33,49 +33,37 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Hash {
   
-  private static final String ALGORITHM_MD5 = "MD5";
-  
-  private static final String ALGORITHM_SHA1 = "SHA-1";
-  
-  private static final String ALGORITHM_SHA256 = "SHA-256";
-  
-  private static final String ALGORITHM_SHA512 = "SHA-512";
-  
   private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-  
   
   private final MessageDigest digest;
   
-  
-  public Hash(MessageDigest md) {
-    digest = Match.notNull(md).getOrFail("Bad null MessageDigest");
+  public Hash(DigestAlgorithm algo) {
+    digest = getMessageDigest(algo);
   }
-  
   
   public static Hash md5() {
-    return new Hash(getMessageDigest(ALGORITHM_MD5));
+    return new Hash(DigestAlgorithm.MD5);
   }
-  
   
   public static Hash sha1() {
-    return new Hash(getMessageDigest(ALGORITHM_SHA1));
+    return new Hash(DigestAlgorithm.SHA_1);
   }
-  
   
   public static Hash sha256() {
-    return new Hash(getMessageDigest(ALGORITHM_SHA256));
+    return new Hash(DigestAlgorithm.SHA_256);
   }
-  
   
   public static Hash sha512() {
-    return new Hash(getMessageDigest(ALGORITHM_SHA512));
+    return new Hash(DigestAlgorithm.SHA_512);
   }
   
+  public static Hash create(DigestAlgorithm algo) {
+    return new Hash(algo);
+  }
   
   public String of(String str) {
     return bytesToHex(digest.digest(UTF8String.from(str).getBytes()));
   }
-  
   
   public String of(byte[] bs) {
     return bytesToHex(digest.digest(
@@ -83,12 +71,10 @@ public class Hash {
     );
   }
   
-  
   public String of(byte[] bs, int off, int len) {
     digest.update(Match.notNull(bs).getOrFail("Bad null byte array"), off, len);
     return bytesToHex(digest.digest());
   }
-  
   
   public Hash put(String str) {
     if(str != null && !str.isEmpty()) {
@@ -97,7 +83,6 @@ public class Hash {
     return this;
   }
   
-  
   public Hash put(byte[] bs) {
     if(bs != null && bs.length > 0) {
       digest.update(bs);
@@ -105,25 +90,21 @@ public class Hash {
     return this;
   }
   
-  
   public String get() {
     return bytesToHex(digest.digest());
   }
-  
   
   public byte[] getBytes() {
     return digest.digest();
   }
   
-  
-  private static MessageDigest getMessageDigest(String algorithm) {
+  private static MessageDigest getMessageDigest(DigestAlgorithm algo) {
     try {
-      return MessageDigest.getInstance(algorithm);
+      return MessageDigest.getInstance(Match.notNull(algo).getOrFail().getAlgorithmName());
     } catch (NoSuchAlgorithmException ex) {
       throw new RuntimeException(ex.toString(), ex);
     }
   }
-  
   
   public static String bytesToHex(byte[] bytes) {
     char[] hexChars = new char[bytes.length * 2];
@@ -133,22 +114,6 @@ public class Hash {
         hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
     }
     return new String(hexChars);
-  }
-  
-  
-  public static void main(String[] args) {
-    String s1 = "32132155";
-    String s2 = "juno";
-    System.out.println("* s1....: "+ s1);
-    System.out.println("* s2....: "+ s2);
-    System.out.println("* md5...: "+ Hash.md5().of(s1));
-    System.out.println("* md5...: "+ Hash.md5().of(s2));
-    System.out.println("* sha1..: "+ Hash.sha1().of(s1));
-    System.out.println("* sha1..: "+ Hash.sha1().of(s2));
-    System.out.println("* sha256: "+ Hash.sha256().of(s1));
-    System.out.println("* sha256: "+ Hash.sha256().of(s2));
-    System.out.println("* sha512: "+ Hash.sha512().of(s1));
-    System.out.println("* sha512: "+ Hash.sha512().of(s2));
   }
   
 }

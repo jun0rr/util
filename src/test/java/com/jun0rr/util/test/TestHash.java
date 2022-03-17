@@ -4,7 +4,8 @@
  */
 package com.jun0rr.util.test;
 
-import com.jun0rr.util.Hash;
+import com.jun0rr.util.crypto.DigestAlgorithm;
+import com.jun0rr.util.crypto.Hash;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,21 @@ public class TestHash {
     Assertions.assertEquals(SHA1, Hash.sha1().of(TEXT));
     Assertions.assertEquals(SHA256, Hash.sha256().of(TEXT));
     Assertions.assertEquals(SHA512, Hash.sha512().of(TEXT));
+  }
+  
+  
+  @Test
+  public void hash_size() {
+    System.out.println("--- hash_size ---");
+    System.out.println("SHA-256.length.: " + Hash.sha256().put(TEXT).getBytes().length);
+    System.out.println("SHA-1..........: " + Hash.sha1().of(TEXT));
+    System.out.println("SHA-1.length...: " + Hash.sha1().put(TEXT).getBytes().length);
+    System.out.println("SHA-512........: " + Hash.sha512().of(TEXT));
+    System.out.println("SHA-512.length.: " + Hash.sha512().put(TEXT).getBytes().length);
+    System.out.println("SHA3-512.......: " + Hash.create(DigestAlgorithm.SHA3_512).of(TEXT));
+    System.out.println("SHA3-512.length: " + Hash.create(DigestAlgorithm.SHA3_512).put(TEXT).getBytes().length);
+    System.out.println("SHA-384........: " + Hash.create(DigestAlgorithm.SHA_384).of(TEXT));
+    System.out.println("SHA-384.length.: " + Hash.create(DigestAlgorithm.SHA_384).put(TEXT).getBytes().length);
   }
   
 }

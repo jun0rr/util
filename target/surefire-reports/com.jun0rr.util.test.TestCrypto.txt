@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.jun0rr.util.test.TestCrypto
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.286 s <<< FAILURE! - in com.jun0rr.util.test.TestCrypto
+test  Time elapsed: 0.279 s  <<< ERROR!
+java.security.InvalidKeyException: Parameters missing
+	at util@0.1/com.jun0rr.util.test.TestCrypto.test(TestCrypto.java:32)
+

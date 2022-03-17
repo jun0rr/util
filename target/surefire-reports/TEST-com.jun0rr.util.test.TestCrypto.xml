@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.jun0rr.util.test.TestHash" time="0.116" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.jun0rr.util.test.TestCrypto" time="0.286" tests="1" errors="1" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="windows"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
@@ -17,9 +17,9 @@
     <property name="user.country" value="BR"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Java\jdk-11\bin"/>
-    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter C:\Users\f6036477\AppData\Local\Temp\surefire2030891634349054590 2022-03-17T15-39-54_645-jvmRun1 surefire3722311312396853137tmp surefire_01928934779695317425tmp"/>
+    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter C:\Users\f6036477\AppData\Local\Temp\surefire5688464656871870237 2022-03-17T15-42-38_887-jvmRun1 surefire6966728396427336995tmp surefire_0246489222660766116tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="test" value="com.jun0rr.util.test.TestHash"/>
+    <property name="test" value="com.jun0rr.util.test.TestCrypto"/>
     <property name="surefire.test.class.path" value="C:\Java\util\target\test-classes;C:\Users\f6036477\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.6.0\junit-jupiter-api-5.6.0.jar;C:\Users\f6036477\.m2\repository\org\apiguardian\apiguardian-api\1.1.0\apiguardian-api-1.1.0.jar;C:\Users\f6036477\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\f6036477\.m2\repository\org\junit\platform\junit-platform-commons\1.6.0\junit-platform-commons-1.6.0.jar;C:\Users\f6036477\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.6.0\junit-jupiter-engine-5.6.0.jar;C:\Users\f6036477\.m2\repository\org\junit\platform\junit-platform-engine\1.6.0\junit-platform-engine-1.6.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\f6036477"/>
@@ -62,7 +62,13 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="hash" classname="com.jun0rr.util.test.TestHash" time="0.054"/>
-  <testcase name="test" classname="com.jun0rr.util.test.TestHash" time="0.047"/>
-  <testcase name="hash_size" classname="com.jun0rr.util.test.TestHash" time="0.015"/>
+  <testcase name="test" classname="com.jun0rr.util.test.TestCrypto" time="0.279">
+    <error message="Parameters missing" type="java.security.InvalidKeyException">java.security.InvalidKeyException: Parameters missing
+	at util@0.1/com.jun0rr.util.test.TestCrypto.test(TestCrypto.java:32)
+</error>
+    <system-out><![CDATA[* content..: Hello World!! Hello World!! Hello World!! Hello World!! Hello World!!
+* base64...:SGVsbG8gV29ybGQhISBIZWxsbyBXb3JsZCEhIEhlbGxvIFdvcmxkISEgSGVsbG8gV29ybGQhISBIZWxsbyBXb3JsZCEh
+* encrypted: n5li8W+0L5yX3EjzuxfNgvQziuv9KKT9fG+VnMLWs4J/shI/3znVg9yDRC/2QzT9BZneZxJsxzntU66qFEHZzeyuw3uHS8CM6Y+Mv28Ja4o=
+]]></system-out>
+  </testcase>
 </testsuite>
