@@ -5,7 +5,10 @@
 package com.jun0rr.util;
 
 import com.jun0rr.util.match.Match;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 

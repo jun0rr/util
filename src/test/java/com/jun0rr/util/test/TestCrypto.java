@@ -10,6 +10,8 @@ import com.jun0rr.util.crypto.CryptoAlgorithm;
 import com.jun0rr.util.crypto.KeyAlgorithm;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import org.junit.jupiter.api.Test;
@@ -23,21 +25,44 @@ public class TestCrypto {
   public static final String content = "Hello World!! Hello World!! Hello World!! Hello World!! Hello World!!";
   
   @Test
-  public void test() {
+  public void encrypt_secretkey() {
+    System.out.println("--- encrypt_secretkey() ---");
+    try {
     ByteBuffer buf = StandardCharsets.UTF_8.encode(content);
     SecretKey key = Crypto.createSecretKey("32132155", KeyAlgorithm.AES, 32);
-    ByteBuffer out = Crypto.encrypt(key, CryptoAlgorithm.AES_CBC_PKCS5PADDING, buf);
+    CryptoAlgorithm alg = CryptoAlgorithm.AES_CBC_PKCS5PADDING;
+    ByteBuffer out = Crypto.encryptWithIv(key, alg, buf);
+    System.out.println("* out......: " + out);
     System.out.println("* content..: " + content);
     System.out.println("* base64...: " + Base64Codec.encodeToString(buf.flip()));
     System.out.println("* encrypted: " + Base64Codec.encodeToString(out));
-    buf = Crypto.decrypt(key, CryptoAlgorithm.AES_CBC_PKCS5PADDING, out);
-    System.out.println("* decrypted: " + Base64Codec.encodeToString(buf));
+    key = Crypto.createSecretKey("32132155", KeyAlgorithm.AES, 32);
+    buf = Crypto.decryptWithIv(key, alg, out.flip());
+    System.out.println("* decrypted: " + StandardCharsets.UTF_8.decode(buf).toString());
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
   }
   
   @Test
+  public void encrypt_file() {
+    try {
+    Path src = Paths.get("C:/Users/F6036477/Documents/Certificado Internet das Coisas.pdf");
+    Path dst = Paths.get("C:/Users/F6036477/Documents/Certificado Internet das Coisas.txt");
+    SecretKey key = Crypto.createSecretKey("32132155", KeyAlgorithm.AES, 32);
+    Crypto.encryptFile(key, CryptoAlgorithm.AES_CBC_PKCS5PADDING, src, dst, true);
+    src = dst;
+    dst = Paths.get("C:/Users/F6036477/Documents/Certificado Internet das Coisas Decrypt.pdf");
+    Crypto.decryptFile(key, CryptoAlgorithm.AES_CBC_PKCS5PADDING, src, dst, true);
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
+  
+  //@Test
   public void test2() throws Exception {
     Cipher c = Cipher.getInstance(CryptoAlgorithm.AES_CBC_PKCS5PADDING.getAlgorithmName());
-    c.i
+    //c.i
   }
   
 }

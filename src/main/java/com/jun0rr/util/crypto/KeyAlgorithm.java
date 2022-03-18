@@ -4,6 +4,9 @@
  */
 package com.jun0rr.util.crypto;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  *
  * @author F6036477
@@ -32,6 +35,29 @@ public enum KeyAlgorithm implements Algorithm {
   @Override
   public String getAlgorithmName() {
     return name;
+  }
+  
+  public String getPBEKeyAlgorithm(KeyAlgorithm algo) {
+    List<KeyAlgorithm> digest = List.of(HMAC_MD5, HMAC_SHA1, HMAC_SHA224, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512);
+    Optional<KeyAlgorithm> isDigest = digest.stream().filter(k->k == this).findAny();
+    Optional<KeyAlgorithm> algoDigest = digest.stream().filter(k->k == algo).findAny();
+    StringBuffer sb = new StringBuffer("PBEWith");
+    if(isDigest.isPresent()) {
+      sb.append(this.name).append("And").append(algo.name);
+    }
+    else {
+      sb.append(algo.name).append("And").append(this.name);
+    }
+    return sb.toString();
+  }
+  
+  public String getPBKDF2KeyAlgorithm() {
+    List<KeyAlgorithm> digest = List.of(HMAC_MD5, HMAC_SHA1, HMAC_SHA224, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512);
+    Optional<KeyAlgorithm> isDigest = digest.stream().filter(k->k == this).findAny();
+    if(isDigest.isEmpty()) {
+      throw new IllegalStateException("Invalid algorithm to Password-Based Key-Derivation: " + this.name);
+    }
+    return String.format("PBKDF2With%s", this.name); 
   }
   
   public static KeyAlgorithm parse(String name) {
