@@ -5,7 +5,17 @@
 package com.jun0rr.util.test;
 
 import com.jun0rr.util.Base64Codec;
+import com.jun0rr.util.UTF8String;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Base64;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -61,6 +71,38 @@ public class TestBase64Codec {
   @Test
   public void decodeToString_str() {
     Assertions.assertEquals(CONTENT, Base64Codec.decodeToString(BASE64STR));
+  }
+  
+  @Test
+  public void bytes_b64encoded() {
+    SecureRandom sr = new SecureRandom();
+    for(int i = 0; i < 10; i++) {
+      byte[] iv = new byte[16];
+      sr.nextBytes(iv);
+      byte[] enc = Base64.getEncoder().encode(iv);
+      System.out.println("* enc.length: " + enc.length);
+      System.out.println("* enc.......: " + StandardCharsets.UTF_8.decode(ByteBuffer.wrap(enc)).toString());
+      System.out.println("------------------------------------------");
+    }
+  }
+  
+  @Test
+  public void stream_b64Decoded() throws IOException {
+    SecureRandom sr = new SecureRandom();
+    byte[] iv = new byte[16];
+    sr.nextBytes(iv);
+    System.out.println(Arrays.toString(iv));
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    OutputStream out = Base64.getEncoder().wrap(bos);
+    out.write(iv);
+    out.close();
+    byte[] inb = bos.toByteArray();
+    System.out.println(new UTF8String(inb).toString());
+    ByteArrayInputStream bis = new ByteArrayInputStream(inb);
+    InputStream in = Base64.getDecoder().wrap(bis);
+    in.read(iv);
+    in.close();
+    System.out.println(Arrays.toString(iv));
   }
   
 }

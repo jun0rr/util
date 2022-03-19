@@ -8,5 +8,6 @@ module util {
   requires java.base;
   requires java.sql;
   exports com.jun0rr.util;
+  exports com.jun0rr.util.crypto;
   exports com.jun0rr.util.match;
 }

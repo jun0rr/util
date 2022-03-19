@@ -90,6 +90,13 @@ public class Hash {
     return this;
   }
   
+  public Hash put(byte[] bs, int off, int len) {
+    if(bs != null && off >= 0 && off + len <= bs.length) {
+      digest.update(bs, off, len);
+    }
+    return this;
+  }
+  
   public String get() {
     return bytesToHex(digest.digest());
   }

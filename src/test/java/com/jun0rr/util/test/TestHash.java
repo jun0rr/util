@@ -4,8 +4,20 @@
  */
 package com.jun0rr.util.test;
 
+import com.jun0rr.util.crypto.Crypto;
 import com.jun0rr.util.crypto.DigestAlgorithm;
 import com.jun0rr.util.crypto.Hash;
+import com.jun0rr.util.crypto.KeyAlgorithm;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -46,6 +58,37 @@ public class TestHash {
     System.out.println("SHA3-512.length: " + Hash.create(DigestAlgorithm.SHA3_512).put(TEXT).getBytes().length);
     System.out.println("SHA-384........: " + Hash.create(DigestAlgorithm.SHA_384).of(TEXT));
     System.out.println("SHA-384.length.: " + Hash.create(DigestAlgorithm.SHA_384).put(TEXT).getBytes().length);
+  }
+  
+  @Test
+  public void test_mac() throws NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException {
+    SecretKey key = Crypto.createSecretKey("inadonuj", KeyAlgorithm.AES, 32);
+    SecureRandom sr = new SecureRandom();
+    byte[] ivb = new byte[16];
+    sr.nextBytes(ivb);
+    IvParameterSpec iv = new IvParameterSpec(ivb);
+    ByteBuffer input = StandardCharsets.UTF_8.encode("0123456789");
+    Mac mac = Mac.getInstance(KeyAlgorithm.HMAC_SHA256.getAlgorithmName());
+    mac.init(key);
+    mac.update(input);
+    byte[] hmac = mac.doFinal();
+    System.out.println("* hmac=" + Arrays.toString(hmac));
+    System.out.println("* hmac.length=" + hmac.length);
+    
+    mac = Mac.getInstance(KeyAlgorithm.HMAC_SHA256.getAlgorithmName());
+    mac.init(key);
+    mac.update(input.flip());
+    hmac = mac.doFinal();
+    System.out.println("* hmac=" + Arrays.toString(hmac));
+    System.out.println("* hmac.length=" + hmac.length);
+    
+    input = StandardCharsets.UTF_8.encode("01234567890123456789012345678901234567890123456789");
+    mac = Mac.getInstance(KeyAlgorithm.HMAC_SHA256.getAlgorithmName());
+    mac.init(key);
+    mac.update(input);
+    hmac = mac.doFinal();
+    System.out.println("* hmac=" + Arrays.toString(hmac));
+    System.out.println("* hmac.length=" + hmac.length);
   }
   
 }
