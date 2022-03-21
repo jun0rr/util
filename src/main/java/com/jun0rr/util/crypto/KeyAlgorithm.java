@@ -14,6 +14,7 @@ import java.util.Optional;
 public enum KeyAlgorithm implements Algorithm {
   
   AES("AES"),
+  RSA("RSA"),
   ARCFOUR("ARCFOUR"),
   BLOWFISH("Blowfish"),
   DES("DES"),
@@ -37,32 +38,10 @@ public enum KeyAlgorithm implements Algorithm {
     return name;
   }
   
-  public String getPBEKeyAlgorithm(KeyAlgorithm algo) {
-    List<KeyAlgorithm> digest = List.of(HMAC_MD5, HMAC_SHA1, HMAC_SHA224, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512);
-    Optional<KeyAlgorithm> isDigest = digest.stream().filter(k->k == this).findAny();
-    Optional<KeyAlgorithm> algoDigest = digest.stream().filter(k->k == algo).findAny();
-    StringBuffer sb = new StringBuffer("PBEWith");
-    if(isDigest.isPresent()) {
-      sb.append(this.name).append("And").append(algo.name);
-    }
-    else {
-      sb.append(algo.name).append("And").append(this.name);
-    }
-    return sb.toString();
-  }
-  
-  public String getPBKDF2KeyAlgorithm() {
-    List<KeyAlgorithm> digest = List.of(HMAC_MD5, HMAC_SHA1, HMAC_SHA224, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512);
-    Optional<KeyAlgorithm> isDigest = digest.stream().filter(k->k == this).findAny();
-    if(isDigest.isEmpty()) {
-      throw new IllegalStateException("Invalid algorithm to Password-Based Key-Derivation: " + this.name);
-    }
-    return String.format("PBKDF2With%s", this.name); 
-  }
-  
   public static KeyAlgorithm parse(String name) {
     if(name == null || name.isBlank()) return null;
     else if(AES.name.equals(name)) return AES;
+    else if(RSA.name.equals(name)) return RSA;
     else if(ARCFOUR.name.equals(name)) return ARCFOUR;
     else if(BLOWFISH.name.equals(name)) return BLOWFISH;
     else if(DES.name.equals(name)) return DES;

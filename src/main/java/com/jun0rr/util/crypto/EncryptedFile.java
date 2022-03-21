@@ -12,13 +12,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
@@ -26,7 +23,6 @@ import java.util.zip.GZIPOutputStream;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import us.pserver.tools.StringPad;
@@ -37,33 +33,7 @@ import us.pserver.tools.StringPad;
  */
 public class EncryptedFile {
   
-  public static class Progress {
-    private final EncryptedFile file;
-    private final long total;
-    private final long current;
-    public Progress(EncryptedFile f, long t, long c) {
-      this.file = f;
-      this.total = t;
-      this.current = c;
-    }
-    public EncryptedFile getEncryptedFile() { return file; }
-    public long getTotal() { return total; }
-    public long getCurrent() { return current; }
-    public String getProgressBar() {
-      StringPad ppad = StringPad.of("");
-      StringPad spad = StringPad.of("");
-      int len = 18;
-      float perc = getCurrent() / Long.valueOf(getTotal()).floatValue();
-      int cur = Math.round(len * perc);
-      return String.format("[%s>%s] %.1f%%", ppad.lpad("=", cur), spad.rpad(" ", len - cur), perc * 100);
-    }
-  }
-  
   public static final int IV_SIZE = 16;
-  
-  public static final int MAC_SIZE = 32;
-  
-  public static final int IV_ENC_SIZE = 24;
   
   public static final int BUFFER_SIZE = 4096;
   
@@ -135,11 +105,8 @@ public class EncryptedFile {
   }
   
   public EncryptedFile encrypt(Consumer<Progress> cs) throws IOException {
-    SecureRandom sr = new SecureRandom();
-    byte[] ivb = new byte[IV_SIZE];
+    IvParameterSpec iv = Crypto.randomIV();
     byte[] buf = new byte[BUFFER_SIZE];
-    sr.nextBytes(ivb);
-    IvParameterSpec iv = new IvParameterSpec(ivb);
     InputStream in = null;
     OutputStream out = null;
     long total = Files.size(src);
@@ -151,17 +118,17 @@ public class EncryptedFile {
       Cipher c = Unchecked.call(()->Cipher.getInstance(CryptoAlgorithm.AES_CBC_PKCS5PADDING.getAlgorithmName()));
       Unchecked.call(()->c.init(Cipher.ENCRYPT_MODE, key, iv));
       in = new FileInputStream(src.toFile());
-      if(!Files.exists(dst)) {
-        Files.createFile(dst);
-      }
       int fn = 0;
       Path p = dst;
       if(split > 0) {
         p = Paths.get(String.format("%s.%d", dst, fn));
       }
+      if(!Files.exists(p)) {
+        Files.createFile(p);
+      }
       out = getOutput(p, null);
       out.write(hdr.array());
-      out.write(ivb);
+      out.write(iv.getIV());
       out = new CipherOutputStream(out, c);
       int read;
       while((read = in.read(buf)) != -1) {
@@ -262,7 +229,31 @@ public class EncryptedFile {
   }
   
   public static EncryptedFile of(String pwd, Path src, Path dst) {
-    return new EncryptedFile(Crypto.createSecretKey(pwd, KeyAlgorithm.AES, 32), src, dst, true, true, 0);
+    return new EncryptedFile(Crypto.createSecretKey(pwd, KeyAlgorithm.AES, 256), src, dst, true, true, 0);
+  }
+  
+  
+  
+  public static class Progress {
+    private final EncryptedFile file;
+    private final long total;
+    private final long current;
+    public Progress(EncryptedFile f, long t, long c) {
+      this.file = f;
+      this.total = t;
+      this.current = c;
+    }
+    public EncryptedFile getEncryptedFile() { return file; }
+    public long getTotal() { return total; }
+    public long getCurrent() { return current; }
+    public String getProgressBar() {
+      StringPad ppad = StringPad.of("");
+      StringPad spad = StringPad.of("");
+      int len = 18;
+      float perc = getCurrent() / Long.valueOf(getTotal()).floatValue();
+      int cur = Math.round(len * perc);
+      return String.format("[%s>%s] %.1f%%", ppad.lpad("=", cur), spad.rpad(" ", len - cur), perc * 100);
+    }
   }
   
 }
