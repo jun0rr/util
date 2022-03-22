@@ -11,6 +11,7 @@ import com.jun0rr.util.crypto.KeyAlgorithm;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyPair;
 import javax.crypto.Cipher;
@@ -24,6 +25,10 @@ import org.junit.jupiter.api.Test;
 public class TestCrypto {
   
   public static final String content = "Hello World!! Hello World!! Hello World!! Hello World!! Hello World!!";
+  
+  public static final Path PK_PATH = Paths.get("C:/Java/dodge-pk.der");
+  
+  public static final Path PUB_PATH = Paths.get("C:/Java/dodge-pub.der");
   
   @Test
   public void encrypt_secretkey() {
@@ -56,7 +61,7 @@ public class TestCrypto {
   @Test
   public void load_keypair() throws IOException {
     System.out.println("--- load_keypair() ---");
-    KeyPair pair = Crypto.loadKeyPair(Paths.get("C:/Java/dodge-pk.der"), Paths.get("C:/Java/dodge-pub.der"));
+    KeyPair pair = Crypto.loadKeyPair(PK_PATH, PUB_PATH);
     System.out.println("* PrivateKey.: " + Base64Codec.encodeToString(ByteBuffer.wrap(pair.getPrivate().getEncoded())));
     System.out.println("* PublicKey..: " + Base64Codec.encodeToString(ByteBuffer.wrap(pair.getPublic().getEncoded())));
   }
@@ -70,7 +75,7 @@ public class TestCrypto {
     ByteBuffer buf = ByteBuffer.wrap(key.getEncoded());
     System.out.println("* SecretKey...........: " + Base64Codec.encodeToString(buf));
     buf.flip();
-    KeyPair pair = Crypto.loadKeyPair(Paths.get("C:/Java/dodge-pk.der"), Paths.get("C:/Java/dodge-pub.der"));
+    KeyPair pair = Crypto.loadKeyPair(PK_PATH, PUB_PATH);
     Cipher c = Cipher.getInstance(CryptoAlgorithm.RSA_ECB_PKCS1PADDING.getAlgorithmName());
     c.init(Cipher.ENCRYPT_MODE, pair.getPublic());
     ByteBuffer enc = ByteBuffer.allocate(c.getOutputSize(buf.remaining()));

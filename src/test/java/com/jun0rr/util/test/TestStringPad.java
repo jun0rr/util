@@ -4,9 +4,9 @@
  */
 package com.jun0rr.util.test;
 
+import com.jun0rr.util.StringPad;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import us.pserver.tools.StringPad;
 
 /**
  *

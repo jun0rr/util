@@ -5,6 +5,7 @@
  */
 package com.jun0rr.util.crypto;
 
+import com.jun0rr.util.StringPad;
 import com.jun0rr.util.Unchecked;
 import com.jun0rr.util.match.Match;
 import java.io.FileInputStream;
@@ -25,7 +26,6 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import us.pserver.tools.StringPad;
 
 /**
  *
@@ -136,7 +136,7 @@ public class EncryptedFile {
         fcount += read;
         out.write(buf, 0, read);
         cs.accept(new Progress(this, total, count));
-        if(split > 0 && fcount >= split && count < total) {
+        if(split > 0 && count < total && fcount >= split) {
           fn++;
           fcount = 0;
           p = Paths.get(String.format("%s.%d", dst, fn));

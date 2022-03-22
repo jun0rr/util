@@ -129,10 +129,10 @@ public class Crypto {
   
   public static ByteBuffer encryptWithIv(Key key, CryptoAlgorithm algo, ByteBuffer content) {
     IvParameterSpec iv = randomIV();
-    Cipher c = encryptCipher(key, randomIV(), algo);
-    int encsize = Short.BYTES + iv.getIV().length + c.getOutputSize(content.remaining());
+    Cipher c = encryptCipher(key, iv, algo);
+    int encsize = iv.getIV().length + c.getOutputSize(content.remaining()) + 1;
     ByteBuffer output = content.isDirect() ? ByteBuffer.allocateDirect(encsize) : ByteBuffer.allocate(encsize);
-    output.putShort((short) iv.getIV().length);
+    output.put((byte) iv.getIV().length);
     output.put(iv.getIV());
     Unchecked.call(()->c.doFinal(content, output));
     return output.flip();
@@ -147,7 +147,7 @@ public class Crypto {
   }
   
   public static ByteBuffer decryptWithIv(Key key, CryptoAlgorithm algo, ByteBuffer content) {
-    int ivlen = content.getShort();
+    int ivlen = content.get();
     byte[] ivb = new byte[ivlen];
     content.get(ivb);
     IvParameterSpec iv = new IvParameterSpec(ivb);
