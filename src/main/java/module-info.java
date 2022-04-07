@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-module util {
+module jun0rr.util {
   requires java.base;
   requires java.sql;
   exports com.jun0rr.util;
