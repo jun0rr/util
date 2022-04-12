@@ -26,11 +26,11 @@ public class TestCrypto {
   
   public static final String content = "Hello World!! Hello World!! Hello World!! Hello World!! Hello World!!";
   
-  //public static final Path PK_PATH = Paths.get("C:/Java/dodge-pk.der");
-  public static final Path PK_PATH = Paths.get("/home/juno/nb-projects/dodge/src/main/resources/doxy-pk.der");
+  public static final Path PK_PATH = Paths.get("C:/Java/dodge-pk.der");
+  //public static final Path PK_PATH = Paths.get("/home/juno/nb-projects/dodge/src/main/resources/doxy-pk.der");
   
-  //public static final Path PUB_PATH = Paths.get("C:/Java/dodge-pub.der");
-  public static final Path PUB_PATH = Paths.get("/home/juno/nb-projects/dodge/src/main/resources/doxy-pub.der");
+  public static final Path PUB_PATH = Paths.get("C:/Java/dodge-pub.der");
+  //public static final Path PUB_PATH = Paths.get("/home/juno/nb-projects/dodge/src/main/resources/doxy-pub.der");
   
   @Test
   public void encrypt_secretkey() {
@@ -80,6 +80,7 @@ public class TestCrypto {
     KeyPair pair = Crypto.loadKeyPair(PK_PATH, PUB_PATH);
     Cipher c = Cipher.getInstance(CryptoAlgorithm.RSA_ECB_PKCS1PADDING.getAlgorithmName());
     c.init(Cipher.ENCRYPT_MODE, pair.getPublic());
+    System.out.println("* RSA Cipher Output Size (48): " + c.getOutputSize(48));
     ByteBuffer enc = ByteBuffer.allocate(c.getOutputSize(buf.remaining()));
     c.doFinal(buf, enc);
     enc.flip();
