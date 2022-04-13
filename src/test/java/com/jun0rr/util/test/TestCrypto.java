@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.security.KeyPair;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -74,7 +75,11 @@ public class TestCrypto {
     try {
     //SecretKey key = Crypto.createSecretKey("32132155", KeyAlgorithm.AES, 256);
     SecretKey key = Crypto.createSecretKey(256, KeyAlgorithm.AES);
-    ByteBuffer buf = ByteBuffer.wrap(key.getEncoded());
+    IvParameterSpec iv = Crypto.randomIV();
+    ByteBuffer buf = ByteBuffer.allocate(key.getEncoded().length + iv.getIV().length);
+    buf.put(key.getEncoded());
+    buf.put(iv.getIV());
+    buf.flip();
     System.out.println("* SecretKey...........: " + Base64Codec.encodeToString(buf));
     buf.flip();
     KeyPair pair = Crypto.loadKeyPair(PK_PATH, PUB_PATH);
@@ -84,6 +89,7 @@ public class TestCrypto {
     ByteBuffer enc = ByteBuffer.allocate(c.getOutputSize(buf.remaining()));
     c.doFinal(buf, enc);
     enc.flip();
+    System.out.println("* Encrypted Size: " + enc.remaining());
     System.out.println("* Encrypted SecretKey.: " + Base64Codec.encodeToString(enc));
     enc.flip();
     c = Cipher.getInstance(CryptoAlgorithm.RSA_ECB_PKCS1PADDING.getAlgorithmName());
