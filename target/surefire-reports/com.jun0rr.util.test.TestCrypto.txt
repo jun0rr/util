@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.jun0rr.util.test.TestCrypto
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.822 s - in com.jun0rr.util.test.TestCrypto
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.181 s - in com.jun0rr.util.test.TestCrypto
