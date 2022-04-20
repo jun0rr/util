@@ -33,7 +33,7 @@ public class TestEncryptedFile {
   
   public static final int SPLIT_SIZE = 350*1024; // 350K
   
-  @Test
+  //@Test
   public void encrypt_decrypt() throws IOException {
     try {
       System.out.println("* Encrypting...");

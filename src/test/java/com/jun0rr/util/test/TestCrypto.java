@@ -61,7 +61,7 @@ public class TestCrypto {
     System.out.println("* PublicKey..: " + Base64Codec.encodeToString(ByteBuffer.wrap(pair.getPublic().getEncoded())));
   }
   
-  @Test
+  //@Test
   public void load_keypair() throws IOException {
     System.out.println("--- load_keypair() ---");
     KeyPair pair = Crypto.loadKeyPair(PK_PATH, PUB_PATH);
