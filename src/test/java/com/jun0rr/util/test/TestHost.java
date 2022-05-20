@@ -19,7 +19,7 @@ public class TestHost {
     Host h = Host.localhost(5050);
     System.out.println(h);
     System.out.println(h.getIPAddress());
-    Assertions.assertEquals("localhost", h.getHostname());
+    Assertions.assertEquals("127.0.0.1", h.getHostname());
     Assertions.assertEquals("127.0.0.1", h.getIPAddress());
     Assertions.assertEquals(5050, h.getPort());
   }

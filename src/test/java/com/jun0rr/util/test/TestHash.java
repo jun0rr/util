@@ -49,15 +49,21 @@ public class TestHash {
   @Test
   public void hash_size() {
     System.out.println("--- hash_size ---");
-    System.out.println("SHA-256.length.: " + Hash.sha256().put(TEXT).getBytes().length);
     System.out.println("SHA-1..........: " + Hash.sha1().of(TEXT));
     System.out.println("SHA-1.length...: " + Hash.sha1().put(TEXT).getBytes().length);
+    System.out.println("SHA-1.hexlen...: " + Hash.sha1().put(TEXT).get().length());
+    System.out.println("SHA-256........: " + Hash.sha256().put(TEXT).get());
+    System.out.println("SHA-256.length.: " + Hash.sha256().put(TEXT).getBytes().length);
+    System.out.println("SHA-256.hexlen.: " + Hash.sha256().put(TEXT).get().length());
     System.out.println("SHA-512........: " + Hash.sha512().of(TEXT));
     System.out.println("SHA-512.length.: " + Hash.sha512().put(TEXT).getBytes().length);
+    System.out.println("SHA-512.hexlen.: " + Hash.sha512().put(TEXT).get().length());
     System.out.println("SHA3-512.......: " + Hash.create(DigestAlgorithm.SHA3_512).of(TEXT));
     System.out.println("SHA3-512.length: " + Hash.create(DigestAlgorithm.SHA3_512).put(TEXT).getBytes().length);
+    System.out.println("SHA3-512.hexlen: " + Hash.create(DigestAlgorithm.SHA_384).put(TEXT).get().length());
     System.out.println("SHA-384........: " + Hash.create(DigestAlgorithm.SHA_384).of(TEXT));
     System.out.println("SHA-384.length.: " + Hash.create(DigestAlgorithm.SHA_384).put(TEXT).getBytes().length);
+    System.out.println("SHA-384.hexlen.: " + Hash.create(DigestAlgorithm.SHA_384).put(TEXT).get().length());
   }
   
   @Test

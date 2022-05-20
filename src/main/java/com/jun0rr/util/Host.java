@@ -38,7 +38,7 @@ public interface Host {
   
   
   public static Host localhost(int port) {
-    return new HostImpl("localhost", port);
+    return new HostImpl("127.0.0.1", port);
   }
   
   public static Host of(String host, int port) {
