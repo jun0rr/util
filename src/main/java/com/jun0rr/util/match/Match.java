@@ -106,12 +106,22 @@ public class Match<T> extends Check<T,IllegalArgumentException> {
   
   
   public static <U> Match<U> notNull(U val) {
-    return new Match(val, v->v!=null, "Bad null value");
+    return new Match(val, v->v != null, "Bad null value");
   }
   
   
   public static Match<String> notEmpty(String str) {
     return of(str, s -> s != null && !s.isEmpty());
+  }
+  
+  
+  public static Match<String> contains(String str) {
+    return of(str, s -> s != null && s.contains(str));
+  }
+  
+  
+  public static Match<String> notContains(String str) {
+    return of(str, s -> s != null && !s.contains(str));
   }
   
   
@@ -172,7 +182,8 @@ public class Match<T> extends Check<T,IllegalArgumentException> {
     return new Match<>(val, v->
         Double.compare(v.doubleValue(), min.doubleValue()) >= 0 
             && Double.compare(v.doubleValue(), max.doubleValue()) <= 0,
-        String.format("Value not Between parameters !(%f.2 <= %f.2 <= %f.2)", min.doubleValue(), val.doubleValue(), max.doubleValue())
+        String.format("Bad Number Not Between parameters (%f.2 >= %f.2 >= %f.2)", 
+            min.doubleValue(), val.doubleValue(), max.doubleValue())
     );
   }
   
@@ -184,7 +195,8 @@ public class Match<T> extends Check<T,IllegalArgumentException> {
     return new Match<>(val, v->
         Double.compare(v.doubleValue(), min.doubleValue()) > 0 
             && Double.compare(v.doubleValue(), max.doubleValue()) < 0,
-        String.format("Value not Between parameters !(%f.2 < %f.2 < %f.2)", min.doubleValue(), val.doubleValue(), max.doubleValue())
+        String.format("Bad Number Not Between parameters (%f.2 > %f.2 > %f.2)", 
+            min.doubleValue(), val.doubleValue(), max.doubleValue())
     );
   }
   
@@ -194,9 +206,23 @@ public class Match<T> extends Check<T,IllegalArgumentException> {
     notNull(min).failIfNotMatch("Match: Bad null min");
     notNull(max).failIfNotMatch("Match: Bad null max");
     return new Match<>(val, v->
+        Double.compare(v.doubleValue(), min.doubleValue()) <= 0 
+            || Double.compare(v.doubleValue(), max.doubleValue()) >= 0,
+        String.format("Bad Number Between parameters (%f.2 <= %f.2 <= %f.2)", 
+            min.doubleValue(), val.doubleValue(), max.doubleValue())
+    );
+  }
+  
+  
+  public static <U extends Number> Match<U> notBetweenExclusive(U val, U min, U max) {
+    notNull(val).failIfNotMatch("Match: Bad null val");
+    notNull(min).failIfNotMatch("Match: Bad null min");
+    notNull(max).failIfNotMatch("Match: Bad null max");
+    return new Match<>(val, v->
         Double.compare(v.doubleValue(), min.doubleValue()) < 0 
-            && Double.compare(v.doubleValue(), max.doubleValue()) > 0,
-        String.format("Value between parameters (%f.2 < %f.2 < %f.2)", min.doubleValue(), val.doubleValue(), max.doubleValue())
+            || Double.compare(v.doubleValue(), max.doubleValue()) > 0,
+        String.format("Bad Number Between parameters (%f.2 < %f.2 < %f.2)", 
+            min.doubleValue(), val.doubleValue(), max.doubleValue())
     );
   }
   
@@ -207,7 +233,7 @@ public class Match<T> extends Check<T,IllegalArgumentException> {
     notNull(max).failIfNotMatch("Match: Bad null max");
     return new Match<>(val, v->
         v.compareTo(min) >= 0 && v.compareTo(max) <= 0,
-        String.format("Value not Between parameters !(%s <= %s <= %s)", min, val, max)
+        String.format("Bad Date Not Between parameters (%s >= %s >= %s)", min, val, max)
     );
   }
   
@@ -218,8 +244,30 @@ public class Match<T> extends Check<T,IllegalArgumentException> {
     notNull(max).failIfNotMatch("Match: Bad null max");
     return new Match<>(val, v->
         v.compareTo(min) > 0 && v.compareTo(max) < 0,
-        String.format("Value not Between parameters !(%s < %s < %s)", min, val, max)
+        String.format("Bad Date Not Between parameters (%s > %s > %s)", min, val, max)
     );
   }
+  
 
+  public static <U extends Date> Match<U> notBetween(U val, U min, U max) {
+    notNull(val).failIfNotMatch("Match: Bad null val");
+    notNull(min).failIfNotMatch("Match: Bad null min");
+    notNull(max).failIfNotMatch("Match: Bad null max");
+    return new Match<>(val, v->
+        v.compareTo(min) <= 0 || v.compareTo(max) >= 0,
+        String.format("Bad Date Between parameters (%s <= %s <= %s)", min, val, max)
+    );
+  }
+  
+  
+  public static <U extends Date> Match<U> notBetweenExclusive(U val, U min, U max) {
+    notNull(val).failIfNotMatch("Match: Bad null val");
+    notNull(min).failIfNotMatch("Match: Bad null min");
+    notNull(max).failIfNotMatch("Match: Bad null max");
+    return new Match<>(val, v->
+        v.compareTo(min) < 0 || v.compareTo(max) > 0,
+        String.format("Bad Date Between parameters (%s < %s < %s)", min, val, max)
+    );
+  }
+  
 }

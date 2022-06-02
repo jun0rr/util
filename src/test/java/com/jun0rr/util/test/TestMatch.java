@@ -27,7 +27,7 @@ public class TestMatch {
   
   @Test
   public void notBetween() {
-    Assertions.assertThrows(IllegalArgumentException.class, ()->Match.notBetween(5, 0, 5).failIfNotMatch());
+    Assertions.assertThrows(IllegalArgumentException.class, ()->Match.notBetween(4, 0, 5).failIfNotMatch());
   }
   
   @Test

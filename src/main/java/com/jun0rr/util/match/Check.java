@@ -206,14 +206,40 @@ public class Check<T, E extends Throwable> implements Predicate<T> {
     return onExists(val).negate().failWith("File already exists");
   }
   
-  public <U extends Number> Check<U,E> onNotBetween(U val, U min, U max) {
+  public <U extends Number> Check<U,E> onBetween(U val, U min, U max) {
     of(exclass).onNotNull(val).failIfNotMatch("Bad null value Number");
     of(exclass).onNotNull(min).failIfNotMatch("Bad null min Number");
     of(exclass).onNotNull(max).failIfNotMatch("Bad null max Number");
     Predicate<U> match = v->Double.compare(v.doubleValue(), min.doubleValue()) >= 0 
         && Double.compare(v.doubleValue(), max.doubleValue()) <= 0;
     String msg = String.format(
-        "Value not Between parameters !(%f.2 <= %f.2 <= %f.2)", 
+        "Bad Number Not Between parameters (%f.2 >= %f.2 >= %f.2)", 
+        min.doubleValue(), val.doubleValue(), max.doubleValue()
+    );
+    return new Check<U,E>(exclass, val, match, msg, parent);
+  }
+  
+  public <U extends Number> Check<U,E> onBetweenExclusive(U val, U min, U max) {
+    of(exclass).onNotNull(val).failIfNotMatch("Bad null value Number");
+    of(exclass).onNotNull(min).failIfNotMatch("Bad null min Number");
+    of(exclass).onNotNull(max).failIfNotMatch("Bad null max Number");
+    Predicate<U> match = v->Double.compare(v.doubleValue(), min.doubleValue()) > 0 
+        && Double.compare(v.doubleValue(), max.doubleValue()) < 0;
+    String msg = String.format(
+        "Bad Number Not Between parameters (%f.2 >= %f.2 >= %f.2)", 
+        min.doubleValue(), val.doubleValue(), max.doubleValue()
+    );
+    return new Check<U,E>(exclass, val, match, msg, parent);
+  }
+  
+  public <U extends Number> Check<U,E> onNotBetween(U val, U min, U max) {
+    of(exclass).onNotNull(val).failIfNotMatch("Bad null value Number");
+    of(exclass).onNotNull(min).failIfNotMatch("Bad null min Number");
+    of(exclass).onNotNull(max).failIfNotMatch("Bad null max Number");
+    Predicate<U> match = v->Double.compare(v.doubleValue(), min.doubleValue()) <= 0 
+        || Double.compare(v.doubleValue(), max.doubleValue()) >= 0;
+    String msg = String.format(
+        "Bad Number Between parameters (%f.2 <= %f.2 <= %f.2)", 
         min.doubleValue(), val.doubleValue(), max.doubleValue()
     );
     return new Check<U,E>(exclass, val, match, msg, parent);
@@ -223,37 +249,51 @@ public class Check<T, E extends Throwable> implements Predicate<T> {
     of(exclass).onNotNull(val).failIfNotMatch("Bad null value Number");
     of(exclass).onNotNull(min).failIfNotMatch("Bad null min Number");
     of(exclass).onNotNull(max).failIfNotMatch("Bad null max Number");
-    Predicate<U> match = v->Double.compare(v.doubleValue(), min.doubleValue()) > 0 
-        && Double.compare(v.doubleValue(), max.doubleValue()) < 0;
+    Predicate<U> match = v->Double.compare(v.doubleValue(), min.doubleValue()) < 0 
+        || Double.compare(v.doubleValue(), max.doubleValue()) > 0;
     String msg = String.format(
-        "Value not Between parameters !(%f.2 < %f.2 < %f.2)", 
+        "Bad Number Between parameters (%f.2 < %f.2 < %f.2)", 
         min.doubleValue(), val.doubleValue(), max.doubleValue()
     );
     return new Check<U,E>(exclass, val, match, msg, parent);
   }
   
+  public <U extends Date> Check<U,E> onBetween(U val, U min, U max) {
+    of(exclass).onNotNull(val).failIfNotMatch("Bad null value Number");
+    of(exclass).onNotNull(min).failIfNotMatch("Bad null min Number");
+    of(exclass).onNotNull(max).failIfNotMatch("Bad null max Number");
+    Predicate<U> match = v->val.compareTo(min) >= 0 && val.compareTo(max) <= 0;
+    String msg = String.format("Bad Date Not Between parameters (%s >= %s >= %s)", min, val, max);
+    return new Check<U,E>(exclass, val, match, msg, parent);
+  }
+  
+  public <U extends Date> Check<U,E> onBetweenExclusive(U val, U min, U max) {
+    of(exclass).onNotNull(val).failIfNotMatch("Bad null value Number");
+    of(exclass).onNotNull(min).failIfNotMatch("Bad null min Number");
+    of(exclass).onNotNull(max).failIfNotMatch("Bad null max Number");
+    Predicate<U> match = v->val.compareTo(min) > 0 && val.compareTo(max) < 0;
+    String msg = String.format("Bad Date Not Between parameters (%s > %s > %s)", min, val, max);
+    return new Check<U,E>(exclass, val, match, msg, parent);
+  }
+  
   public <U extends Date> Check<U,E> onNotBetween(U val, U min, U max) {
-    of(exclass).onNotNull(val).failIfNotMatch("Bad null value Date");
-    of(exclass).onNotNull(min).failIfNotMatch("Bad null min Date");
-    of(exclass).onNotNull(max).failIfNotMatch("Bad null max Date");
-    Predicate<U> match = v->v.compareTo(min) >= 0 && v.compareTo(max) <= 0;
-    String msg = String.format(
-        "Value not Between parameters !(%s <= %s <= %s)", min, val, max
-    );
+    of(exclass).onNotNull(val).failIfNotMatch("Bad null value Number");
+    of(exclass).onNotNull(min).failIfNotMatch("Bad null min Number");
+    of(exclass).onNotNull(max).failIfNotMatch("Bad null max Number");
+    Predicate<U> match = v->val.compareTo(min) <= 0 || val.compareTo(max) >= 0;
+    String msg = String.format("Bad Date Between parameters (%s <= %s <= %s)", min, val, max);
     return new Check<U,E>(exclass, val, match, msg, parent);
   }
   
   public <U extends Date> Check<U,E> onNotBetweenExclusive(U val, U min, U max) {
-    of(exclass).onNotNull(val).failIfNotMatch("Bad null value Date");
-    of(exclass).onNotNull(min).failIfNotMatch("Bad null min Date");
-    of(exclass).onNotNull(max).failIfNotMatch("Bad null max Date");
-    Predicate<U> match = v->v.compareTo(min) > 0 && v.compareTo(max) < 0;
-    String msg = String.format(
-        "Value not Between parameters !(%s < %s < %s)", min, val, max
-    );
+    of(exclass).onNotNull(val).failIfNotMatch("Bad null value Number");
+    of(exclass).onNotNull(min).failIfNotMatch("Bad null min Number");
+    of(exclass).onNotNull(max).failIfNotMatch("Bad null max Number");
+    Predicate<U> match = v->val.compareTo(min) < 0 || val.compareTo(max) > 0;
+    String msg = String.format("Bad Date Between parameters (%s < %s < %s)", min, val, max);
     return new Check<U,E>(exclass, val, match, msg, parent);
   }
-
+  
   @Override
   public String toString() {
     return "Check{" + "match=" + match + ", obj=" + obj + ", defMessage=" + defMessage + ", parent=" + parent + '}';
@@ -311,6 +351,16 @@ public class Check<T, E extends Throwable> implements Predicate<T> {
   }
   
   
+  public static <U extends Number> Check<U,IllegalArgumentException> between(U val, U min, U max) {
+    return of(IllegalArgumentException.class).onBetween(val, min, max);
+  }
+  
+  
+  public static <U extends Number> Check<U,IllegalArgumentException> betweenExclusive(U val, U min, U max) {
+    return of(IllegalArgumentException.class).onBetweenExclusive(val, min, max);
+  }
+  
+  
   public static <U extends Number> Check<U,IllegalArgumentException> notBetween(U val, U min, U max) {
     return of(IllegalArgumentException.class).onNotBetween(val, min, max);
   }
@@ -318,6 +368,16 @@ public class Check<T, E extends Throwable> implements Predicate<T> {
   
   public static <U extends Number> Check<U,IllegalArgumentException> notBetweenExclusive(U val, U min, U max) {
     return of(IllegalArgumentException.class).onNotBetweenExclusive(val, min, max);
+  }
+  
+  
+  public static <U extends Date> Check<U,IllegalArgumentException> between(U val, U min, U max) {
+    return of(IllegalArgumentException.class).onBetween(val, min, max);
+  }
+  
+  
+  public static <U extends Date> Check<U,IllegalArgumentException> betweenExclusive(U val, U min, U max) {
+    return of(IllegalArgumentException.class).onBetweenExclusive(val, min, max);
   }
   
   
