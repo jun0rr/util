@@ -23,8 +23,10 @@ package com.jun0rr.util.crypto;
 
 import com.jun0rr.util.UTF8String;
 import com.jun0rr.util.match.Match;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 /**
  *
@@ -65,6 +67,11 @@ public class Hash {
     return bytesToHex(digest.digest(UTF8String.from(str).getBytes()));
   }
   
+  public String of(ByteBuffer bb) {
+    digest.update(Objects.requireNonNull(bb));
+    return bytesToHex(digest.digest());
+  }
+  
   public String of(byte[] bs) {
     return bytesToHex(digest.digest(
         Match.notNull(bs).getOrFail("Bad null byte array"))
@@ -93,6 +100,13 @@ public class Hash {
   public Hash put(byte[] bs, int off, int len) {
     if(bs != null && off >= 0 && off + len <= bs.length) {
       digest.update(bs, off, len);
+    }
+    return this;
+  }
+  
+  public Hash put(ByteBuffer bb) {
+    if(bb != null && bb.hasRemaining()) {
+      digest.update(bb);
     }
     return this;
   }

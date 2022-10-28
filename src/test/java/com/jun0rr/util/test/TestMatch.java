@@ -15,6 +15,20 @@ import org.junit.jupiter.api.Test;
  */
 public class TestMatch {
   
+  public static final String EMAIL_REGEX = "[a-zA-Z0-9_.]+@[a-zA-Z0-9_]+\\.[a-zA-Z0-9_.]+";
+  
+  @Test
+  public void notEmptyAndMatches() {
+    String email = "juno.rr@gmail";
+    Assertions.assertThrows(IllegalArgumentException.class, ()->Match.notEmpty(email)
+        .and(e->e.matches(EMAIL_REGEX))
+        .failIfNotMatch("Bad e-mail format: %s", email));
+    String email2 = "juno.rr@gmail.com";
+    Assertions.assertDoesNotThrow(()->Match.notEmpty(email2)
+        .and(e->e.matches(EMAIL_REGEX))
+        .failIfNotMatch("Bad e-mail format: %s", email2));
+  }
+  
   @Test
   public void notEmpty() {
     Assertions.assertThrows(IllegalArgumentException.class, ()->Match.notEmpty("").failIfNotMatch());
