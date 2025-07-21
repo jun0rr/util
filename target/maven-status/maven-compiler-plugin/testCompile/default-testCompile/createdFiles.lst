@@ -7,6 +7,7 @@ com\jun0rr\util\test\TestUTF8String.class
 com\jun0rr\util\test\TestCrypto.class
 com\jun0rr\util\test\TestBase64Codec.class
 com\jun0rr\util\test\TestCondition.class
+com\jun0rr\util\test\TestStringToLongArray.class
 com\jun0rr\util\test\TestResourceLoader.class
 com\jun0rr\util\test\TestFCondition.class
 com\jun0rr\util\test\TestStringPad.class

@@ -28,7 +28,7 @@ public interface Condition<T> extends Cloneable {
   
   public <U> Condition<U> instanceOf(Class<U> c);
   
-  public Condition<Object> other(Consumer<Object> c);
+  public Condition<Object> otherwise(Consumer<Object> c);
   
   public void eval(T obj);
   
@@ -103,7 +103,7 @@ public interface Condition<T> extends Cloneable {
     }
     
     @Override
-    public Condition<Object> other(Consumer<Object> c) {
+    public Condition<Object> otherwise(Consumer<Object> c) {
       cons.add(Match.notNull(c).getOrFail());
       return new ConditionImpl(preds, cons);
     }

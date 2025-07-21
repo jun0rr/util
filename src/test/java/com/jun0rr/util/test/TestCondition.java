@@ -31,6 +31,11 @@ public class TestCondition {
     c.clone().eval(11);
     c.clone().eval(19);
     c.clone().eval(22);
+    //c.eval(7);
+    //c.eval(3);
+    //c.eval(11);
+    //c.eval(19);
+    //c.eval(22);
   }
   
   @Test
@@ -45,7 +50,7 @@ public class TestCondition {
         .then(o->System.out.printf("'%s' is a Boolean%n", o))
         .instanceOf(String.class)
         .then(o->System.out.printf("'%s' is a String%n", o))
-        .other(o->System.out.printf("'%s' is an Object%n", o));
+        .otherwise(o->System.out.printf("'%s' is an Object%n", o));
     c.clone().eval("Hello");
     c.clone().eval(false);
     c.clone().eval(Host.localhost(5555));
