@@ -8,7 +8,9 @@ import com.jun0rr.util.match.Match;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  *
@@ -25,6 +27,8 @@ public interface Condition<T> extends Cloneable {
   public Condition<T> elseIf(Predicate<T> p);
   
   public Condition<T> elseAccept(Consumer<T> c);
+  
+  public Condition<T> elseThrows(Function<T, ? extends Exception> x);
   
   public <U> Condition<U> instanceOf(Class<U> c);
   
@@ -95,7 +99,13 @@ public interface Condition<T> extends Cloneable {
       cons.add(Match.notNull(c).getOrFail());
       return this;
     }
-
+    
+    @Override
+    public Condition<T> elseThrows(Function<T, ? extends Exception> x) {
+      elseAccept(o->{throw Unchecked.<RuntimeException>unchecked(x.apply(o));});
+      return this;
+    }
+    
     @Override
     public <U> Condition<U> instanceOf(Class<U> c) {
       preds.add(o->c.isAssignableFrom(o.getClass()));

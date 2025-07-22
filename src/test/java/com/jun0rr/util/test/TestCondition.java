@@ -6,8 +6,9 @@ package com.jun0rr.util.test;
 
 import com.jun0rr.util.Condition;
 import com.jun0rr.util.Host;
-import org.junit.jupiter.api.Assertions;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 
 /**
  *
@@ -25,17 +26,12 @@ public class TestCondition {
         .then(i->System.out.printf("%d is lesser then 15%n", i))
         .elseIf(i->i <= 20)
         .then(i->System.out.printf("%d is lesser then 20%n", i))
-        .elseAccept(i->System.out.printf("%d is greater then 20%n", i));
+        .elseThrows(i->new IOException(String.format("%d is greater then 20%n", i)));
     c.clone().eval(7);
     c.clone().eval(3);
     c.clone().eval(11);
     c.clone().eval(19);
-    c.clone().eval(22);
-    //c.eval(7);
-    //c.eval(3);
-    //c.eval(11);
-    //c.eval(19);
-    //c.eval(22);
+    Assertions.assertThrows(IOException.class, ()->c.clone().eval(22));
   }
   
   @Test
