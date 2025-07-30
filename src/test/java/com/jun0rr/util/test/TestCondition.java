@@ -26,12 +26,17 @@ public class TestCondition {
         .then(i->System.out.printf("%d is lesser then 15%n", i))
         .elseIf(i->i <= 20)
         .then(i->System.out.printf("%d is lesser then 20%n", i))
-        .elseThrows(i->new IOException(String.format("%d is greater then 20%n", i)));
-    c.clone().eval(7);
-    c.clone().eval(3);
-    c.clone().eval(11);
-    c.clone().eval(19);
-    Assertions.assertThrows(IOException.class, ()->c.clone().eval(22));
+        .elseThrows(i->{
+          IOException ex = new IOException(String.format("%d is greater then 20%n", i));
+          System.out.println(ex);
+          return ex;
+        })
+        ;
+    c.eval(7);
+    c.eval(3);
+    c.eval(11);
+    c.eval(19);
+    Assertions.assertThrows(IOException.class, ()->c.eval(22));
   }
   
   @Test
@@ -46,12 +51,18 @@ public class TestCondition {
         .then(o->System.out.printf("'%s' is a Boolean%n", o))
         .instanceOf(String.class)
         .then(o->System.out.printf("'%s' is a String%n", o))
-        .otherwise(o->System.out.printf("'%s' is an Object%n", o));
-    c.clone().eval("Hello");
-    c.clone().eval(false);
-    c.clone().eval(Host.localhost(5555));
-    c.clone().eval(1f);
-    c.clone().eval(1);
+        //.otherwise(o->System.out.printf("'%s' is an Object%n", o))
+        .elseThrows(o->{
+          IOException ex = new IOException(String.format("'%s' is an object%n", o));
+          System.out.println(ex);
+          return ex;
+        })
+        ;
+    c.eval("Hello");
+    c.eval(false);
+    c.eval(1f);
+    c.eval(1);
+    Assertions.assertThrows(IOException.class, ()->c.eval(Host.localhost(5555)));
   }
   
 }

@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 /**
  *
@@ -28,7 +27,7 @@ public interface Condition<T> extends Cloneable {
   
   public Condition<T> elseAccept(Consumer<T> c);
   
-  public Condition<T> elseThrows(Function<T, ? extends Exception> x);
+  public Condition<T> elseThrows(Function<Object, ? extends Exception> x);
   
   public <U> Condition<U> instanceOf(Class<U> c);
   
@@ -101,9 +100,8 @@ public interface Condition<T> extends Cloneable {
     }
     
     @Override
-    public Condition<T> elseThrows(Function<T, ? extends Exception> x) {
-      elseAccept(o->{throw Unchecked.<RuntimeException>unchecked(x.apply(o));});
-      return this;
+    public Condition<T> elseThrows(Function<Object, ? extends Exception> x) {
+      return elseAccept(o->{throw Unchecked.<RuntimeException>unchecked(x.apply(o));});
     }
     
     @Override
@@ -133,6 +131,8 @@ public interface Condition<T> extends Cloneable {
     
     @Override
     public void eval(T obj) {
+      Deque<Predicate> preds = new LinkedList<>(this.preds);
+      Deque<Consumer> cons = new LinkedList<>(this.cons);
       while(!preds.isEmpty()) {
         Predicate p = preds.poll();
         Consumer<Object> c = cons.poll();
