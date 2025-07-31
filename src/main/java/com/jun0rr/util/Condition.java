@@ -74,7 +74,7 @@ public interface Condition<T> extends Cloneable {
       cons.add(Match.notNull(c).getOrFail());
       return this;
     }
-
+    
     @Override
     public Condition<T> or(Predicate<T> p) {
       preds.add(preds.pollLast().or(Match.notNull(p).getOrFail()));
@@ -124,11 +124,6 @@ public interface Condition<T> extends Cloneable {
       return cd;
     }
     
-    private void accept(Consumer<Object> c, Object o) {
-      try { c.accept(o); } 
-      catch(ClassCastException e) {}
-    }
-    
     @Override
     public void eval(T obj) {
       Deque<Predicate> preds = new LinkedList<>(this.preds);
@@ -137,13 +132,13 @@ public interface Condition<T> extends Cloneable {
         Predicate p = preds.poll();
         Consumer<Object> c = cons.poll();
         if(p.test(obj) && c != null) {
-          accept(c, obj);
+          Unchecked.call(()->c.accept(obj));
           return;
         }
       }
       Consumer c = cons.poll();
       if(c != null) {
-        accept(c, obj);
+        Unchecked.call(()->c.accept(obj));
       }
     }
 
