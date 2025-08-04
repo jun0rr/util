@@ -23,15 +23,19 @@ public interface Condition<T> extends Cloneable {
   
   public Condition<T> then(Consumer<T> c);
   
+  public Condition<T> thenThrows(Function<T, ? extends Exception> x);
+  
   public Condition<T> elseIf(Predicate<T> p);
   
   public Condition<T> elseAccept(Consumer<T> c);
   
-  public Condition<T> elseThrows(Function<Object, ? extends Exception> x);
+  public Condition<T> elseThrows(Function<T, ? extends Exception> x);
   
   public <U> Condition<U> instanceOf(Class<U> c);
   
   public Condition<Object> otherwise(Consumer<Object> c);
+  
+  public <U> Condition<U> map(Function<T,U> x);
   
   public void eval(T obj);
   
@@ -76,6 +80,11 @@ public interface Condition<T> extends Cloneable {
     }
     
     @Override
+    public Condition<T> thenThrows(Function<T, ? extends Exception> x) {
+      return elseAccept(o->{throw Unchecked.<RuntimeException>unchecked(x.apply(o));});
+    }
+    
+    @Override
     public Condition<T> or(Predicate<T> p) {
       preds.add(preds.pollLast().or(Match.notNull(p).getOrFail()));
       return this;
@@ -100,7 +109,7 @@ public interface Condition<T> extends Cloneable {
     }
     
     @Override
-    public Condition<T> elseThrows(Function<Object, ? extends Exception> x) {
+    public Condition<T> elseThrows(Function<T, ? extends Exception> x) {
       return elseAccept(o->{throw Unchecked.<RuntimeException>unchecked(x.apply(o));});
     }
     
@@ -113,6 +122,11 @@ public interface Condition<T> extends Cloneable {
     @Override
     public Condition<Object> otherwise(Consumer<Object> c) {
       cons.add(Match.notNull(c).getOrFail());
+      return new ConditionImpl(preds, cons);
+    }
+    
+    @Override
+    public <U> Condition<U> map(Function<T,U> x) {
       return new ConditionImpl(preds, cons);
     }
 

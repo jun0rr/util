@@ -22,9 +22,19 @@ public interface FCondition<T,X> extends Cloneable {
   
   public FCondition<T,X> then(Function<T,X> f);
   
+  public FCondition<T,X> thenThrows(Function<T, ? extends Exception> x);
+  
   public FCondition<T,X> elseIf(Predicate<T> p);
   
   public FCondition<T,X> elseApply(Function<T,X> f);
+  
+  public FCondition<T,X> elseThrows(Function<T, ? extends Exception> x);
+  
+  public <U> FCondition<U,X> instanceOf(Class<U> c);
+  
+  public <U> FCondition<U,X> map(Function<T,U> x);
+  
+  public FCondition<Object,X> otherwise(Function<Object,X> c);
   
   public X eval(T obj);
   
@@ -33,6 +43,10 @@ public interface FCondition<T,X> extends Cloneable {
   
   public static <U,V> FCondition<U,V> of(Predicate<U> p) {
     return new FConditionImpl(p);
+  }
+  
+  public static <U,V> FCondition<U,V> of(Class<U> c) {
+    return new FConditionImpl(o->c.isAssignableFrom(o.getClass()));
   }
   
   
@@ -71,6 +85,11 @@ public interface FCondition<T,X> extends Cloneable {
     }
     
     @Override
+    public FCondition<T,X> thenThrows(Function<T, ? extends Exception> x) {
+      return elseApply(o->{throw Unchecked.<RuntimeException>unchecked(x.apply(o));});
+    }
+    
+    @Override
     public FCondition<T,X> or(Predicate<T> p) {
       preds.add(preds.pollLast().or(Match.notNull(p).getOrFail()));
       return this;
@@ -87,6 +106,27 @@ public interface FCondition<T,X> extends Cloneable {
       funs.add(Match.notNull(f).getOrFail());
       return this;
     }
+    
+    public FCondition<T,X> elseThrows(Function<T, ? extends Exception> x) {
+      return elseApply(o->{throw Unchecked.<RuntimeException>unchecked(x.apply(o));});
+    }
+    
+    @Override
+    public <U> FCondition<U,X> instanceOf(Class<U> c) {
+      preds.add(o->c.isAssignableFrom(o.getClass()));
+      return new FConditionImpl(preds, funs);
+    }
+    
+    @Override
+    public <U> FCondition<U,X> map(Function<T,U> x) {
+      return new FConditionImpl(preds, funs);
+    }
+    
+    @Override
+    public FCondition<Object,X> otherwise(Function<Object,X> c) {
+      funs.add(Match.notNull(c).getOrFail());
+      return new FConditionImpl(preds, funs);
+    }
 
     @Override
     public FCondition<T,X> clone() {
@@ -98,6 +138,8 @@ public interface FCondition<T,X> extends Cloneable {
     
     @Override
     public X eval(T obj) {
+      Deque<Predicate> preds = new LinkedList<>(this.preds);
+      Deque<Function> funs = new LinkedList<>(this.funs);
       while(!preds.isEmpty()) {
         Predicate<T> p = preds.poll();
         Function<T,X> f = funs.poll();

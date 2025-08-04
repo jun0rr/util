@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.jun0rr.util.test.TestCrypto" time="1.994" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.jun0rr.util.test.TestCrypto" time="2.862" tests="3" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="windows"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
@@ -17,7 +17,7 @@
     <property name="user.country" value="BR"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Java\jdk-11\bin"/>
-    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter C:\Users\f6036477\AppData\Local\Temp\surefire5141751271754452565 2025-07-31T10-13-43_756-jvmRun1 surefire6460320028006934237tmp surefire_09222113682607958787tmp"/>
+    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter C:\Users\f6036477\AppData\Local\Temp\surefire6443688177612963972 2025-08-04T10-46-00_353-jvmRun1 surefire16223119535740549653tmp surefire_016589481559606801115tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Java\util\target\test-classes;C:\Users\f6036477\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.6.0\junit-jupiter-api-5.6.0.jar;C:\Users\f6036477\.m2\repository\org\apiguardian\apiguardian-api\1.1.0\apiguardian-api-1.1.0.jar;C:\Users\f6036477\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\f6036477\.m2\repository\org\junit\platform\junit-platform-commons\1.6.0\junit-platform-commons-1.6.0.jar;C:\Users\f6036477\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.6.0\junit-jupiter-engine-5.6.0.jar;C:\Users\f6036477\.m2\repository\org\junit\platform\junit-platform-engine\1.6.0\junit-platform-engine-1.6.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -61,7 +61,7 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="rsa_encrypt_password" classname="com.jun0rr.util.test.TestCrypto" time="0.1"/>
-  <testcase name="encrypt_secretkey" classname="com.jun0rr.util.test.TestCrypto" time="0.04"/>
-  <testcase name="gen_keypair" classname="com.jun0rr.util.test.TestCrypto" time="1.853"/>
+  <testcase name="rsa_encrypt_password" classname="com.jun0rr.util.test.TestCrypto" time="0.503"/>
+  <testcase name="encrypt_secretkey" classname="com.jun0rr.util.test.TestCrypto" time="0"/>
+  <testcase name="gen_keypair" classname="com.jun0rr.util.test.TestCrypto" time="2.357"/>
 </testsuite>
