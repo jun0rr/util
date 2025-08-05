@@ -29,10 +29,21 @@ import java.util.Date;
 import java.util.function.Predicate;
 
 /**
+ * A generic validation utility class that wraps a value and a predicate,
+ * allowing fluent validation and exception handling.
  *
- * @author Juno Roesler - juno@pserver.us
- * @version 0.0 - 31/12/2017
- * @param <T>
+ * <p>This class supports chaining validations, customizing failure messages,
+ * and throwing specific exceptions when conditions are not met.</p>
+ *
+ * <p>Usage example:</p>
+ * <pre>{@code
+ *   String name = Check.notEmpty("Juno").getOrFail(); // returns "Juno"
+ *   Integer age = Check.between(25, 18, 65).getOrFail(); // returns 25
+ * }</pre>
+ *
+ * @param <T> the type of the object being validated
+ * @param <E> the type of exception to be thrown if validation fails
+ * @author Juno Roesler - juno.rr@gmail.com
  */
 public class Check<T, E extends Throwable> implements Predicate<T> {
   
