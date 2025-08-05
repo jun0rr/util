@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.jun0rr.util;
 
 import com.jun0rr.util.match.Match;
@@ -12,7 +8,7 @@ import java.util.function.Predicate;
 
 /**
  *
- * @author F6036477
+ * @author Juno Roesler
  */
 public interface FCondition<T,X> extends Cloneable {
   
@@ -42,11 +38,11 @@ public interface FCondition<T,X> extends Cloneable {
   
   
   public static <U,V> FCondition<U,V> of(Predicate<U> p) {
-    return new FConditionImpl(p);
+    return new FConditionImpl<U,V>(p);
   }
   
   public static <U,V> FCondition<U,V> of(Class<U> c) {
-    return new FConditionImpl(o->c.isAssignableFrom(o.getClass()));
+    return new FConditionImpl<U,V>(o->c.isAssignableFrom(o.getClass()));
   }
   
   
