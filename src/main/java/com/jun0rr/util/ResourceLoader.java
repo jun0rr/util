@@ -134,7 +134,6 @@ public class ResourceLoader {
       URL url = null;
       while(en.hasMoreElements()) {
         url = en.nextElement();
-        //System.out.println("- ResourceLoader.findResource.nextElement: " + url);
         String surl = url.toString();
         if(surl.contains(def)) break;
       }

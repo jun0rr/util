@@ -94,7 +94,7 @@ public interface ExceptionHandle<E extends Throwable> {
    * @return A new instance of DefaultExceptionHandle configured for the given class.
    */
   public static <T extends Throwable> ExceptionHandle<T> of(Class<T> exClass) {
-    return new DefaultExceptionHandle(exClass);
+    return new DefaultExceptionHandle<>(exClass);
   }
   
 }
